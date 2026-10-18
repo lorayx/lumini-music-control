@@ -1,0 +1,75 @@
+name: Windows build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Rust toolchain
+        shell: pwsh
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          rustup target add x86_64-pc-windows-msvc
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Native tests
+        shell: pwsh
+        run: ./scripts/Build-Windows.ps1 -Mode test
+      - name: Build installer
+        shell: pwsh
+        run: ./scripts/Build-Windows.ps1 -Mode bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lumini-windows-x64
+          path: |
+            src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe
+            src-tauri/target/x86_64-pc-windows-msvc/release/lumini-music-control.exe
+          if-no-files-found: error
+      - name: Prepare release files
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Invalid release version' }
+          New-Item -ItemType Directory release-assets | Out-Null
+          $release = 'src-tauri/target/x86_64-pc-windows-msvc/release'
+          Copy-Item "$release/bundle/nsis/*-setup.exe" "release-assets/LUMINI-Music-Control-$version-windows-x64-setup.exe"
+          New-Item -ItemType Directory portable | Out-Null
+          Copy-Item "$release/lumini-music-control.exe", LICENSE, THIRD_PARTY_NOTICES.md, README.md portable/
+          Compress-Archive -Path portable/* -DestinationPath "release-assets/LUMINI-Music-Control-$version-windows-x64.zip"
+          Copy-Item LICENSE, THIRD_PARTY_NOTICES.md release-assets/
+          Get-ChildItem release-assets -File | Where-Object Extension -in '.exe','.zip' | ForEach-Object {
+            "$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLower())  $($_.Name)"
+          } | Set-Content release-assets/SHA256SUMS.txt -Encoding utf8
+      - name: Publish versioned preview release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          $tag = "v$version"
+          gh release view $tag --json tagName 2>$null
+          if ($LASTEXITCODE -eq 0) { Write-Host 'Release already exists; keeping published assets'; exit 0 }
+          $assets = @(Get-ChildItem release-assets -File | ForEach-Object FullName)
+          gh release create $tag @assets --target $env:GITHUB_SHA --title "LUMINI Music Control $version" --notes-file RELEASE_NOTES.md --prerelease
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }

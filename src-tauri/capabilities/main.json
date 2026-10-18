@@ -1,0 +1,12 @@
+{
+  "identifier": "main",
+  "description": "Only local media controls and event subscription",
+  "windows": [
+    "main",
+    "taskbar"
+  ],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten"
+  ]
+}

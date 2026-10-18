@@ -1,0 +1,73 @@
+:root{font-family:'Segoe UI Variable Text','Segoe UI',sans-serif;color-scheme:dark;--bg:#282828;--surface:#333333;--text:#f4f4f4;--muted:#b5b5b5;--line:#ffffff12;--accent:#99caff;--accent-ink:#00335c;--hover:#ffffff0d;--strip:#242424f5;color:var(--text);background:transparent;font-synthesis:none;text-rendering:optimizeLegibility}
+:root[data-theme=light]{color-scheme:light;--bg:#f5f5f5;--surface:#ffffff;--text:#202020;--muted:#626262;--line:#00000010;--accent:#0067c0;--accent-ink:#ffffff;--hover:#00000008;--strip:#f3f3f3f5}
+@media(prefers-color-scheme:light){:root[data-theme=system]{color-scheme:light;--bg:#f5f5f5;--surface:#ffffff;--text:#202020;--muted:#626262;--line:#00000010;--accent:#0067c0;--accent-ink:#ffffff;--hover:#00000008;--strip:#f3f3f3f5}}
+*{box-sizing:border-box}html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:transparent}body{user-select:none}button,input{font:inherit}button{color:inherit;border:0;background:transparent;cursor:pointer;touch-action:manipulation;transition:background .12s,opacity .12s}button svg{display:block;flex-shrink:0}button:disabled{opacity:.3;cursor:default}button:not(:disabled):hover{background:var(--hover)}button:not(:disabled):active{opacity:.75}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.panel{position:relative;display:flex;flex-direction:column;width:100%;height:100%;padding:0 20px;background:var(--bg);border:1px solid var(--line);border-radius:9px;overflow:hidden}header{height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;letter-spacing:.4px}.brand small{font-size:11px;letter-spacing:0;color:var(--muted);margin-left:8px;font-weight:400}.logo{height:16px;display:flex;align-items:center;gap:3px}.logo i{width:3px;height:10px;border-radius:2px;background:var(--accent)}.logo i:nth-child(2){height:16px}.logo i:nth-child(3){height:7px}
+.icon{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border-radius:5px}.icon.subtle{width:30px;height:30px;color:var(--muted)}.track{display:flex;align-items:center;gap:14px;margin-top:12px;min-height:76px}.art{width:76px;height:76px;flex-shrink:0;border-radius:6px;overflow:hidden;display:grid;place-items:center;background:var(--surface);color:var(--muted);box-shadow:0 2px 6px #0002}.art img{width:100%;height:100%;object-fit:cover}.metadata{min-width:0;display:flex;flex-direction:column;justify-content:center}.eyebrow{display:flex;align-items:center;gap:6px;font-size:10px;line-height:14px;color:var(--muted);margin-bottom:4px}.status-dot{width:4px;height:4px;border-radius:50%;background:var(--muted)}.status-dot.playing{background:var(--accent)}h1{margin:0;font-size:18px;line-height:24px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:0}p{margin:3px 0 0;font-size:12px;line-height:17px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.transport{display:flex;align-items:center;justify-content:center;gap:22px;margin:12px 0 10px}.primary{width:42px;height:42px;padding:0;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:var(--accent-ink)}.primary:not(:disabled):hover{background:var(--accent);filter:brightness(1.08)}footer{margin-top:auto;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line)}.open-app{display:flex;align-items:center;gap:5px;padding:6px 3px;font-size:11px;color:var(--muted);border-radius:4px}.footer-actions{display:flex;gap:4px}
+.expanded .track{flex-direction:column;align-items:stretch;gap:16px;margin-top:14px;min-height:0}.expanded .art{width:280px;height:280px;align-self:center;border-radius:8px;box-shadow:0 5px 18px #0003}.expanded .metadata{width:100%;min-height:78px}.expanded h1{font-size:22px;line-height:29px}.expanded .metadata p{font-size:13px;line-height:19px}.expanded .eyebrow{font-size:11px;margin-bottom:5px}.album{font-size:11px;line-height:16px;margin-top:4px;color:var(--muted);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.timeline{margin-top:13px}.timeline input{display:block;width:100%;height:4px;margin:8px 0 11px;accent-color:var(--accent);cursor:pointer}.timeline input:disabled{opacity:.3;cursor:default}.timeline>div{display:flex;justify-content:space-between;font-size:11px;line-height:16px;font-variant-numeric:tabular-nums;color:var(--muted)}.expanded .transport{margin:13px 0;gap:28px}.expanded .primary{width:48px;height:48px}
+.preferences{padding:12px 0 16px;min-height:0;flex:1;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--muted) transparent}.section-title{margin:2px 0 22px}.section-title h1{font-size:22px}.section-title span{display:block;font-size:12px;color:var(--muted);margin-top:4px}.theme-label{font-size:12px;color:var(--muted)}.segmented{display:flex;padding:3px;background:var(--surface);border:1px solid var(--line);border-radius:5px;margin:9px 0 17px;gap:2px}.segmented button{flex:1;border-radius:3px;font-size:12px;padding:8px 0}.segmented button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}.setting{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}.setting b{font-size:13px;font-weight:400}.setting small{display:block;font-size:11px;line-height:16px;color:var(--muted);margin-top:4px}.setting input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0}.setting input[type=number]{width:68px;height:30px;padding:4px;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:4px}.shortcut-choices{margin:8px 0 0}.shortcut-choices button{font-size:9px}.privacy{display:flex;gap:7px;align-items:center;font-size:11px;margin-top:22px}.error{position:absolute;left:16px;right:16px;bottom:43px;z-index:2;padding:8px 10px;max-height:55px;overflow:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface);font-size:11px;line-height:15px;color:#e6947d;box-shadow:0 3px 12px #0002}.error:empty{display:none}
+.taskbar-strip{width:max-content;height:100%;display:inline-flex;align-items:center;gap:2px;padding:3px 2px;border:0;background:transparent;box-shadow:none;color:var(--text)}
+.taskbar-strip>button{width:26px;height:32px;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;border-radius:4px}
+.taskbar-strip>.taskbar-info{flex:0 0 auto;min-width:0;width:max-content;max-width:148px;gap:8px;justify-content:flex-start;text-align:left;padding:0}
+.taskbar-cover{width:30px;height:30px;flex-shrink:0;border-radius:3px;display:grid;place-items:center;overflow:hidden;background:var(--surface)}.taskbar-cover img{width:100%;height:100%;object-fit:cover}
+.taskbar-text{min-width:0;width:max-content;max-width:110px;display:flex;flex-direction:column;justify-content:center}.taskbar-text b,.taskbar-text small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.taskbar-text b{font-size:11px;line-height:15px;font-weight:600}.taskbar-text small{font-size:10px;line-height:13px;color:var(--muted)}
+.lyrics-control{display:flex;flex-shrink:0;margin-left:4px}.taskbar-lyrics{width:28px;height:30px;padding:0;display:grid;place-items:center;border-radius:4px;pointer-events:none}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}:root[data-motion=reduce] *{transition:none!important;animation:none!important}
+
+
+.player-settings{margin-bottom:22px}.player-settings>label:first-child{font-size:12px;color:var(--muted)}select{display:block;width:100%;min-height:34px;margin:8px 0;padding:6px 8px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--text);font:inherit;font-size:12px;overflow:hidden}select:disabled{opacity:.5}.all-players{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);margin:8px 0}.all-players input{accent-color:var(--accent)}.player-settings details{margin-top:12px;font-size:11px}.player-settings summary{cursor:pointer;color:var(--muted)}.player-settings p{white-space:normal;font-size:11px;line-height:16px;margin:8px 0}.refresh-players{padding:7px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);font-size:11px}.player-warning{color:#dc9a77}.player-hint{color:var(--muted)}.starting{animation:startup-pulse .8s ease-in-out infinite alternate}@keyframes startup-pulse{from{opacity:.35}to{opacity:1}}
+
+
+:root[data-view=taskbar]{--text:#f4f4f4;--muted:#c4c4c4;--surface:#ffffff14;--hover:#ffffff14}
+:root[data-view=taskbar][data-taskbar-theme=light]{--text:#202020;--muted:#555;--surface:#0000000f;--hover:#0000000c}
+
+.taskbar-strip>.taskbar-info:not(:disabled):hover{background:transparent}
+.taskbar-info .taskbar-cover{position:relative;overflow:visible;background:transparent;transition:transform 180ms cubic-bezier(.2,.8,.2,1);transform-origin:center;z-index:1}
+.taskbar-cover:hover{transform:scale(1.1)}
+.cover-layer{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;border-radius:3px;background:var(--surface)}
+.taskbar-text{position:relative;border-radius:4px;padding:1px 3px;margin-left:-3px;transition:background 160ms;overflow:hidden}
+.taskbar-text:hover{background:transparent}
+.track-copy{display:block;min-width:0;max-width:110px}.track-copy.outgoing{position:absolute;inset:1px 3px;pointer-events:none;animation:copy-out 240ms ease both}
+.track-copy.incoming{animation:copy-in 240ms cubic-bezier(.2,.8,.2,1) both}
+.cover-layer.outgoing{animation:cover-out 240ms ease both;pointer-events:none}.cover-layer.incoming{animation:cover-in 240ms ease both}
+.track-title,.track-artist{animation:copy-in 240ms ease both}.art img{animation:cover-in 240ms ease both}
+@keyframes copy-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes copy-out{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-8px)}}
+@keyframes cover-in{from{opacity:0}to{opacity:1}}@keyframes cover-out{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.taskbar-cover:hover{transform:none}}
+:root[data-motion=reduce] .taskbar-cover:hover{transform:none}
+
+.taskbar-strip{position:relative;isolation:isolate}
+.liquid-glow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.taskbar-strip>button,.taskbar-strip>.lyrics-control{position:relative;z-index:1}
+
+
+.taskbar-shell{width:max-content;height:100%;display:flex;align-items:center;color:var(--text)}
+.taskbar-shell .taskbar-strip{height:40px;flex-shrink:0}
+.taskbar-strip>.taskbar-heart{margin-left:2px}.taskbar-heart.liked{color:#f497b2}
+:root[data-taskbar-theme=light] .taskbar-heart.liked{color:#b82561}
+.taskbar-strip>.taskbar-lyrics{pointer-events:auto}
+.taskbar-strip>.taskbar-info{position:relative;z-index:1;display:flex;align-items:center}
+.taskbar-cover{padding:0;border:0;color:inherit}
+.taskbar-info>.taskbar-cover:not(:disabled):hover{background:transparent}
+.taskbar-text{height:32px;min-width:92px;max-width:110px;display:grid;align-items:center;isolation:isolate}
+.taskbar-label{padding:0;width:100%;max-width:100%;text-align:left;overflow:hidden;transform-origin:50% 100%;opacity:1;transform:translateY(0) scaleY(1);transition:opacity 160ms ease,transform 210ms cubic-bezier(.2,.8,.2,1)}
+.taskbar-label:not(:disabled):hover{background:transparent}
+.taskbar-text.seek-open .taskbar-label{opacity:0;transform:translateY(12px) scaleY(.25);pointer-events:none}
+.taskbar-seek{position:absolute;inset:2px 5px;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(-16px);pointer-events:none;transition:opacity 150ms ease,transform 210ms cubic-bezier(.2,.8,.2,1)}
+.taskbar-text.seek-open .taskbar-seek{opacity:1;transform:translateY(0);pointer-events:auto}
+.taskbar-seek input{appearance:none;-webkit-appearance:none;display:block;touch-action:none;width:100%;min-width:0;height:15px;padding:0;margin:0;background:transparent;cursor:pointer;outline-offset:0}
+.taskbar-seek input::-webkit-slider-runnable-track{height:3px;border-radius:3px;background:linear-gradient(to right,var(--text) var(--seek-fill),var(--surface) var(--seek-fill))}
+.taskbar-seek input::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:7px;height:7px;margin-top:-2px;border-radius:50%;background:var(--text);box-shadow:0 0 0 1px #0001}
+.taskbar-seek input:disabled{cursor:default;opacity:.45}
+.taskbar-seek-time{display:flex;justify-content:space-between;gap:4px;font-size:8px;line-height:10px;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+
+/* Taskbar hover uses motion only; the transparent surface never lights up. */
+.taskbar-strip button:not(:disabled):hover{background:transparent}
+.taskbar-strip>button{transition:transform 180ms cubic-bezier(.2,.8,.2,1),opacity 120ms ease,color 180ms ease;transform-origin:center}
+.taskbar-strip>button:not(:disabled):hover{transform:scale(1.1)}
+.taskbar-strip>button:not(:disabled):active{transform:scale(.94);opacity:1}
+.heart-glyph{display:grid;place-items:center;transform-origin:center}
+.heart-tap{animation:heart-press 380ms cubic-bezier(.2,.8,.2,1)}
+@keyframes heart-press{0%{transform:scale(1)}25%{transform:scale(.78)}65%{transform:scale(1.16)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.taskbar-strip>button:not(:disabled):hover,.taskbar-strip>button:not(:disabled):active{transform:none}}
+:root[data-motion=reduce] .taskbar-strip>button:not(:disabled):hover,:root[data-motion=reduce] .taskbar-strip>button:not(:disabled):active{transform:none}

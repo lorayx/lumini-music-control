@@ -1,0 +1,8 @@
+import{describe,it,expect}from'vitest';
+import{AudioMotion}from'./audioMotion';
+describe('audio-driven liquid motion',()=>{
+ it('responds to an attack immediately and releases softly',()=>{const a=new AudioMotion();a.receive({active:true,kick:.9,sub:.8},0,0);const first=a.step(16,1/30,true);expect(first.kick).toBeGreaterThan(.87);expect(first.sub).toBeGreaterThan(.3);expect(first.sub).toBeLessThan(.8);a.receive({active:false},32,32);const release=a.step(50,1/30,true);expect(release.kick).toBeLessThan(first.kick);expect(release.kick).toBeGreaterThan(.5);});
+ it('does not retain sound across silence, disabled state or track reset',()=>{const a=new AudioMotion();a.receive({active:true,kick:1,bass:1,sub:1,mid:1,treble:1},0,0);a.step(16,1/30,true);let bands=a.step(500,1/30,true);expect(bands.kick).toBeLessThan(.9);for(let i=0;i<100;i++)bands=a.step(600+i*34,1/30,false);expect(Math.max(...Object.values(bands))).toBeLessThan(.001);a.reset();expect(a.step(20,1/30,true)).toEqual({kick:0,bass:0,sub:0,mid:0,treble:0});});
+ it('ignores stale, out-of-order and invalid values',()=>{const a=new AudioMotion();a.receive({active:true,kick:1,timestamp:1000},0,2000);expect(a.step(10,.1,true).kick).toBe(0);a.receive({active:true,kick:.5,timestamp:2000,sub:NaN,mid:Infinity,treble:-1},20,2000);a.receive({active:true,kick:1,timestamp:1900},21,2000);const v=a.step(30,.1,true);expect(v.kick).toBeCloseTo(.5,3);expect(v.sub+v.mid+v.treble).toBe(0);});
+ it('preserves independent bands and bounded values',()=>{const a=new AudioMotion();a.receive({active:true,bass:2,sub:.7,mid:.25,treble:0},0,0);const v=a.step(20,1,true);expect(v.bass).toBeLessThanOrEqual(1);expect(v.sub).toBeGreaterThan(v.mid);expect(v.treble).toBe(0);});
+});
