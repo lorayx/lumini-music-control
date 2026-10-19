@@ -7,6 +7,19 @@ use tauri::{Emitter, Manager, State};
 use tauri_plugin_autostart::ManagerExt;
 
 #[tauri::command]
+async fn get_queue(service:State<'_,MediaSessionService>)->Result<services::yandex_controls::QueueSnapshot,String>{
+ let state=service.snapshot.read().map_err(|_|"Состояние недоступно")?.clone();tauri::async_runtime::spawn_blocking(move||services::yandex_controls::queue_snapshot(state)).await.map_err(|e|e.to_string())?
+}
+#[tauri::command]
+async fn play_queue(token:String,index:usize,service:State<'_,MediaSessionService>)->Result<(),String>{
+ let state=service.snapshot.read().map_err(|_|"Состояние недоступно")?.clone();
+ let track=tauri::async_runtime::spawn_blocking(move||services::yandex_controls::play_queued(state,token,index)).await.map_err(|e|e.to_string())??;
+ let until=std::time::Instant::now()+std::time::Duration::from_secs(12);
+ loop{let confirmed=service.snapshot.read().map(|s|s.source_id==model::TARGET_ID&&s.title.trim()==track.media_title&&s.artist.trim()==track.artist&&s.status=="Playing").unwrap_or(false);if confirmed{return Ok(());}if std::time::Instant::now()>=until{return Err("Яндекс Музыка ещё не начала выбранный трек. Обновите очередь".into());}let _=service.tx.try_send(Message::Refresh(true));tokio::time::sleep(std::time::Duration::from_millis(250)).await;}
+}
+#[tauri::command]
+async fn play_wave(app:tauri::AppHandle,service:State<'_,MediaSessionService>,settings:State<'_,SettingsService>)->Result<(),String>{services::launcher::start_wave(app,service.inner().clone(),settings.load()?).await}
+#[tauri::command]
 async fn get_yandex_features(service:State<'_,MediaSessionService>)->Result<services::yandex_controls::YandexFeatures,String>{
  let state=service.snapshot.read().map_err(|_|"Состояние недоступно")?.clone();tauri::async_runtime::spawn_blocking(move||services::yandex_controls::inspect(state)).await.map_err(|e|e.to_string())
 }
@@ -78,7 +91,7 @@ fn main() {
         .plugin(tauri_plugin_single_instance::init(|app,_,_| { let _=services::window::show(app,None); }))
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().with_handler(|app,_,event| { if event.state()==tauri_plugin_global_shortcut::ShortcutState::Pressed { let _=services::window::show(app,None); } }).build())
-        .invoke_handler(tauri::generate_handler![get_yandex_features,yandex_action,get_audio_reactivity,get_media,playback,show_from_taskbar,hide_panel,get_taskbar_light_theme,set_taskbar_width,set_expanded,get_settings,set_settings,get_autostart,set_autostart,open_player,get_players,get_active_players,motion_allowed])
+        .invoke_handler(tauri::generate_handler![get_queue,play_queue,play_wave,get_yandex_features,yandex_action,get_audio_reactivity,get_media,playback,show_from_taskbar,hide_panel,get_taskbar_light_theme,set_taskbar_width,set_expanded,get_settings,set_settings,get_autostart,set_autostart,open_player,get_players,get_active_players,motion_allowed])
         .setup(|app| {
             app.manage(services::window::WindowManager::default());
             let data=app.path().app_config_dir()?;

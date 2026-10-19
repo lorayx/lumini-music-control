@@ -15,3 +15,5 @@ pub mod audio_reactivity;
 pub mod yandex_controls;
 
 mod audio_analysis;
+
+pub mod background_window;

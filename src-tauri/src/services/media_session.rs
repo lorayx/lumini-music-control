@@ -115,7 +115,7 @@ impl MediaSessionService {
                             for session in sessions { if session.SourceAppUserModelId().map_err(|e| e.to_string())?.to_string() == target { matches.push(session); } }
                             if matches.len() != 1 {
                                 current = None;
-                                if let Message::Command(_, reply) = message { let _ = reply.send(Err("Нет однозначной сессии выбранного плеера".into())); }
+                                if let Message::Command(_, reply) = message { let _ = reply.send(Err(if matches.is_empty(){"Сессия плеера ещё недоступна".into()}else{"Найдено несколько сессий выбранного плеера".into()})); }
                                 return Ok(MediaState { error: if matches.len() > 1 { Some("Найдено несколько сессий выбранного плеера".into()) } else { None }, ..MediaState::default() });
                             }
                             let changed = current.as_ref().map(|s| s.session != matches[0]).unwrap_or(true);
@@ -152,8 +152,18 @@ impl MediaSessionService {
         tokio::time::timeout(std::time::Duration::from_secs(4),receiver).await.map_err(|_|"Медиасервис не ответил")?.map_err(|_|"Медиасервис остановлен".into())
     }
     pub async fn command(&self, action: PlaybackAction) -> Result<(), String> {
-        let (reply, receiver) = oneshot::channel();
-        self.tx.try_send(Message::Command(action, reply)).map_err(|_| "Медиасервис занят, повторите команду")?;
-        tokio::time::timeout(std::time::Duration::from_secs(12), receiver).await.map_err(|_| "Команда не получила ответа")?.map_err(|_| "Медиасервис остановлен")?
+        // Yandex can briefly remove its GSMTC session while changing tracks.
+        // Retry only an explicit missing-session rejection, before any action
+        // was sent. Never retry an uncertain Next/Previous or a timeout.
+        let deadline=std::time::Instant::now()+std::time::Duration::from_secs(3);
+        loop {
+            let (reply, receiver) = oneshot::channel();
+            self.tx.try_send(Message::Command(action.clone(), reply)).map_err(|_| "Медиасервис занят, повторите команду")?;
+            let result=tokio::time::timeout(std::time::Duration::from_secs(12), receiver).await.map_err(|_| "Команда не получила ответа")?.map_err(|_| "Медиасервис остановлен")?;
+            if !retry_missing_session(&result,std::time::Instant::now()<deadline){return result;}
+            tokio::time::sleep(std::time::Duration::from_millis(250)).await;
+        }
     }
 }
+fn retry_missing_session(result:&Result<(),String>,within_deadline:bool)->bool {within_deadline&&matches!(result,Err(e) if e=="Сессия плеера ещё недоступна")}
+#[cfg(test)]mod command_tests{use super::*;#[test]fn only_retries_commands_that_were_never_sent(){assert!(retry_missing_session(&Err("Сессия плеера ещё недоступна".into()),true));for error in ["Команда не получила ответа","Найдено несколько сессий выбранного плеера","Плеер отклонил команду"]{assert!(!retry_missing_session(&Err(error.into()),true));}assert!(!retry_missing_session(&Ok(()),true));assert!(!retry_missing_session(&Err("Сессия плеера ещё недоступна".into()),false));}}

@@ -96,8 +96,8 @@ pub fn show(app: &tauri::AppHandle, click: Option<(f64,f64)>) -> Result<(),Strin
     let area=Area{left:info.rcWork.left,top:info.rcWork.top,right:info.rcWork.right,bottom:info.rcWork.bottom};
     let gap=(8.0*scale).round() as i32;
     let expanded=app.state::<WindowManager>().expanded.load(Ordering::Relaxed);
-    let width=((384.0*scale).round() as i32).min((area.right-area.left-gap*2).max(1));
-    let height=(((if expanded{640.0}else{250.0})*scale).round() as i32).min((area.bottom-area.top-gap*2).max(1));
+    let width=((440.0*scale).round() as i32).min((area.right-area.left-gap*2).max(1));
+    let height=(((if expanded{640.0}else{430.0})*scale).round() as i32).min((area.bottom-area.top-gap*2).max(1));
     let (x,y)=placement(area,point,(width,height),gap);
     configure(app)?;
     window.set_size(PhysicalSize::new(width as u32,height as u32)).map_err(|e|e.to_string())?;
